@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/nodemon.json",
+  "watch": ["src"],
+  "ext": "js",
+  "ignore": [
+    ".git",
+    "node_modules",
+    "test"
+  ],
+  "env": {
+    "PORT": 3000,
+    "JWT_SECRET": "worldIsFullOfDevelopers",
+    "SALT": "worldIsFullOfSalt",
+    "DB_URL": "mongodb://127.0.0.1:27017/todo-local"
+  }
+}
