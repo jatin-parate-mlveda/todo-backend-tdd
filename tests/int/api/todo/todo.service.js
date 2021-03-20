@@ -18,7 +18,6 @@ const {
   createTodo,
   updateTodo,
   deleteTodo,
-  deleteAllTodosOfUser,
 } = require('../../../../src/api/todo/todo.service');
 const { createUser } = require('../../../../src/api/user/user.service');
 const { resStrings } = require('../../../../src/common/constants');
@@ -225,10 +224,34 @@ module.exports = () => describe('todo.service/', () => {
   });
 
   describe('deleteTodo', () => {
+    it('should delete todo', async () => {
+      const { _id: todoId } = await createTodo(todoDetails);
+      const deletedTodo = await deleteTodo(todoId);
+      const result = await Todo.findById(todoId);
+      expect(result).to.be.null;
+      verifyTodo(deletedTodo);
+    });
 
-  });
+    it('should fail if invalid object id', async () => {
+      const errStr = 'passed for invalid object id';
+      try {
+        await deleteTodo('invalid');
+        throw errStr;
+      } catch (err) {
+        if (err === errStr) {
+          throw err;
+        }
 
-  describe('deleteAllTodosOfUser', () => {
+        expect(err)
+          .to.be.instanceof(CastError);
+        expect(err.path).to.be.equal('_id');
+        expect(err.stringValue).to.be.equal('"invalid"');
+      }
+    });
 
+    it('should return null if not found', async () => {
+      const deletedTodo = await deleteTodo(new ObjectId());
+      expect(deletedTodo).to.be.null;
+    });
   });
 });
