@@ -1,6 +1,10 @@
 const { disconnect } = require('mongoose');
 const logger = require('./logger').getLogger('addProcessListener');
 
+/**
+ * @param {{ cleanup: boolean, exit: boolean }} param0
+ * @param {number} exitCode
+ */
 const handleProcessError = ({ cleanup, exit }, exitCode) => {
   if (cleanup) {
     disconnect()
@@ -30,7 +34,7 @@ const addProcessListeners = () => {
     () => handleProcessError({ cleanup: true, exit: true }, 143),
   ); // SIGTERM
 
-  // kill pid
+  // kill pid (like pm2 or nodemon restarts)
   process.on('SIGUSR1', () => handleProcessError({ exit: true }, 130)); // SIGINT
   process.on('SIGUSR2', () => handleProcessError({ exit: true }, 130)); // SIGINT
 };
