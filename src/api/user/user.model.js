@@ -7,7 +7,7 @@ const {
   isURL,
 } = require('validator');
 const gravatar = require('gravatar');
-const { resStrings } = require('../../common/constants');
+const { resStrings, userModelName } = require('../../common/constants');
 
 /** @type {import('./user').UserSchema} */
 const userSchema = new Schema(
@@ -43,6 +43,6 @@ const userSchema = new Schema(
   { versionKey: false },
 );
 
-const User = model('users', userSchema);
+const User = model(userModelName, userSchema);
 
 module.exports = User;

@@ -3,6 +3,11 @@ exports.resStrings = {
   unAuthorized: 'Unauthorized access!',
   internalServer: 'Internal Server Error!',
   unProcessableEntity: 'UnProcessable Entity!',
+  todo: {
+    noDueDate: 'Due Date is required',
+    noTitle: 'Title is required',
+    noUser: 'Associated user is required',
+  },
   user: {
     noBodyToUpdate: 'At least one parameter is required to update',
     alreadyExists: 'User already exists!',
@@ -18,7 +23,12 @@ exports.resStrings = {
   },
 };
 
+// envs
 exports.jwtSecret = process.env.JWT_SECRET;
 exports.saltSecret = process.env.SALT;
 exports.dbUrl = process.env.DB_URL;
 exports.port = parseInt(process.env.PORT || 3000, 10);
+
+// model names
+exports.userModelName = 'users';
+exports.todoModelName = 'todos';
