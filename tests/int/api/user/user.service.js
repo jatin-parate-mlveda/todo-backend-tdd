@@ -5,10 +5,7 @@ const {
   afterEach,
 } = require('mocha');
 const { expect } = require('chai');
-const {
-  Error: { ValidationError },
-  Types: { ObjectId },
-} = require('mongoose');
+const { Error: { ValidationError } } = require('mongoose');
 const User = require('../../../../src/api/user/user.model');
 const hashPassword = require('../../../../src/common/hashPassword');
 const {
@@ -73,9 +70,9 @@ module.exports = () => describe('user.service', () => {
     });
 
     it('should fail for duplicate email', async () => {
-      (await createUser(userDetails)).toJSON();
+      await createUser(userDetails);
       try {
-        (await createUser(userDetails)).toJSON();
+        await createUser(userDetails);
         throw 'passed for duplicate email id';
       } catch (error) {
         if (error === 'passed for duplicate email id') {
@@ -155,6 +152,24 @@ module.exports = () => describe('user.service', () => {
           .to.have.property('message', resStrings.user.noName);
       }
     });
+
+    it('should fail for invalid avatar', async () => {
+      const errStr = 'passed for invalid avatar';
+      try {
+        await createUser({ ...userDetails, avatar: 'invalid' });
+        throw errStr;
+      } catch (error) {
+        if (error === errStr) {
+          throw error;
+        }
+
+        expect(error)
+          .to.be.instanceOf(ValidationError);
+        expect(error.errors)
+          .to.have.property('avatar')
+          .to.have.property('message', resStrings.user.invalidAvatar);
+      }
+    });
   });
 
   describe('getUserByEmail', () => {
@@ -168,16 +183,6 @@ module.exports = () => describe('user.service', () => {
       const foundUser = await returnPromise;
       verifyUser(foundUser);
     });
-
-    it('should return null if no user', async () => {
-      const returnPromise = getUserByEmail(userDetails.email);
-      expect(returnPromise)
-        .to
-        .be
-        .instanceOf(Promise);
-      const result = await returnPromise;
-      expect(result).to.be.null;
-    });
   });
 
   describe('updateUserById', () => {
@@ -190,30 +195,6 @@ module.exports = () => describe('user.service', () => {
 
       const updatedUser = await updateUserById(createdUser._id, userDetails);
       verifyUser(updatedUser);
-    });
-
-    it('should fail if invalid avatar passed', async () => {
-      try {
-        const { _id } = await createUser(userDetails);
-        await updateUserById(_id, {
-          avatar: 'invalid',
-        });
-        throw 'passed for invalid avatar';
-      } catch (error) {
-        if (error === 'passed for invalid avatar') {
-          throw error;
-        }
-        expect(error)
-          .to.be.instanceOf(ValidationError);
-        expect(error.errors)
-          .to.have.property('avatar')
-          .to.have.property('message', resStrings.user.invalidAvatar);
-      }
-    });
-
-    it('should return null if user not found', async () => {
-      const result = await updateUserById(new ObjectId(), userDetails);
-      expect(result).to.be.null;
     });
   });
 });

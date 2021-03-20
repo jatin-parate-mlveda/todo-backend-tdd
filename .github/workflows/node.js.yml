@@ -25,5 +25,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+      env:
+        DB_URL: ${{ secrets.TEST_GH_DB_URL }}
     - run: npm ci
-    - run: npm run test
+    - run: npm run test:gh

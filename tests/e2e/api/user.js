@@ -186,7 +186,7 @@ module.exports = () => describe('user/', () => {
       verifyUserResponse(res.body.user);
     });
 
-    it('should return 404', async () => {
+    it('should return not found if user not registered', async () => {
       const res = await chai.request(app)
         .post(path)
         .set('Content-Type', 'application/json')
@@ -215,7 +215,7 @@ module.exports = () => describe('user/', () => {
         .equal(resStrings.user.notFound);
     });
 
-    it('should return 401 for invalid password', async () => {
+    it('should return unauthorized for invalid password', async () => {
       await createUser(userDetails);
       const res = await chai.request(app)
         .post(path)
@@ -245,7 +245,7 @@ module.exports = () => describe('user/', () => {
         .equal(resStrings.user.invalidPassword);
     });
 
-    it('should return 422 for no password', async () => {
+    it('should return unprocessable entity for no password', async () => {
       await createUser(userDetails);
       const res = await chai.request(app)
         .post(path)
@@ -456,6 +456,30 @@ module.exports = () => describe('user/', () => {
         .to.have.property('error')
         .to.be.an('object')
         .to.have.property('message', resStrings.user.noAvatar);
+    });
+
+    it('should not update email', async () => {
+      const { password, ...jwtPayload } = (
+        await createUser(userDetails)
+      ).toJSON();
+      const token = await sign(jwtPayload);
+
+      const res = await chai.request(app)
+        .put(reqPathPrefix)
+        .set('Cookie', `token=${token}`)
+        .set('Content-Type', 'application/json')
+        .send({
+          email: 'jatin.parate@mlveda.com',
+        });
+
+      expect(res)
+        .to.be.json;
+      expect(res)
+        .to.have.status(UNPROCESSABLE_ENTITY);
+      expect(res.body)
+        .to.have.property('error')
+        .to.be.an('object')
+        .to.have.property('message', resStrings.user.cantUpdateEmail);
     });
   });
 

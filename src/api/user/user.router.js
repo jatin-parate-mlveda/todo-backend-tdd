@@ -52,6 +52,8 @@ userRouter.route('/')
         .optional({ nullable: false })
         .exists({ checkNull: true })
         .withMessage(resStrings.user.noPassword),
+      body('email')
+        .not().exists().withMessage(resStrings.user.cantUpdateEmail),
     ],
     validateReq,
     updateUserHandler,

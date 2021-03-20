@@ -1,5 +1,8 @@
 const Todo = require('./todo.model');
 
+/** @param {import('mongoose').Types.ObjectId | string} userId */
+exports.getAllByUserId = async (userId) => await Todo.find({ user: userId });
+
 /** @param {import('./todo').TodoCreateData} todoDetails */
 exports.createTodo = async (todoDetails) => await Todo.create(todoDetails);
 

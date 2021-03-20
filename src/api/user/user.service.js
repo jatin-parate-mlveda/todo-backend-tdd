@@ -1,14 +1,12 @@
 const hashPassword = require('../../common/hashPassword');
 const User = require('./user.model');
 
-/**
- * @param {import('./user').UserCreateData} userData
- */
+/** @param {import('./user').UserCreateData} userData */
 const createUser = async (userData = {}) => await User.create(
   { ...userData, password: await hashPassword(userData.password) },
 );
+
 /**
- *
  * @param {string} email
  * @returns {Promise<null | import('./user').UserDocument>}
  */

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start:local": "nodemon ./src/server.js",
-    "test": "mocha ./tests/index.js --exit --timeout 1500"
+    "test:local": "NODE_ENV=test-local mocha ./tests/index.js --exit --timeout 1500",
+    "test:gh": "NODE_ENV=test-gh mocha ./tests/index.js --exit --timeout 1500"
   },
   "keywords": [],
   "author": "",

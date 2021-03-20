@@ -9,6 +9,7 @@ exports.resStrings = {
     noUser: 'Associated user is required',
   },
   user: {
+    cantUpdateEmail: 'Email cannot be updated!',
     noBodyToUpdate: 'At least one parameter is required to update',
     alreadyExists: 'User already exists!',
     notFound: 'Requested user not found!',
