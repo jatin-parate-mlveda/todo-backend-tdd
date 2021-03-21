@@ -1,18 +1,19 @@
 const { Error: { ValidationError, CastError } } = require('mongoose');
 const ApiError = require('../common/apiError');
+const { frontEndUrl } = require('../common/constants');
 const logger = require('../common/logger')
   .getLogger('app.controller');
 
-/** @type {import('express').e.RequestHandler} */
+/** @type {import('@types/express').RequestHandler} */
 const pageNotFoundHandler = async (req, res, next) => {
   try {
-    next(ApiError.notFound());
+    res.redirect(frontEndUrl);
   } catch (error) {
     next(error);
   }
 };
 
-/** @type {import('express').e.ErrorRequestHandler} */
+/** @type {import('@types/express').ErrorRequestHandler} */
 const generalErrorHandler = async (err, {
   method,
   path,

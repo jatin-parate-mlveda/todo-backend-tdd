@@ -86,8 +86,19 @@ exports.loginHandler = async (req, res, next) => {
       _id,
       ...userDetails
     } = userInDb.toJSON();
-    res.cookie('token', await sign({ ...userDetails, _id: _id.toHexString() }));
+    const token = await sign({ ...userDetails, _id: _id.toHexString() });
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 30);
+
     res
+      .cookie(
+        'token',
+        token,
+        {
+          path: '/',
+          expires,
+        },
+      )
       .status(OK)
       .json({
         user: userDetails,

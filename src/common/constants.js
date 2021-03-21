@@ -31,6 +31,7 @@ exports.jwtSecret = process.env.JWT_SECRET;
 exports.saltSecret = process.env.SALT;
 exports.dbUrl = process.env.DB_URL;
 exports.port = parseInt(process.env.PORT || 3000, 10);
+exports.frontEndUrl = process.env.FRONTEND_URL;
 
 // model names
 exports.userModelName = 'users';

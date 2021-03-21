@@ -8,6 +8,7 @@
     "test"
   ],
   "env": {
+    "FRONTEND_URL": "http://localhost:3001",
     "NODE_ENV": "test-local",
     "PORT": 3000,
     "JWT_SECRET": "worldIsFullOfDevelopers",
