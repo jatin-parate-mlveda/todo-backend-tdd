@@ -97,6 +97,8 @@ exports.loginHandler = async (req, res, next) => {
         {
           path: '/',
           expires,
+          sameSite: 'none',
+          secure: true,
         },
       )
       .status(OK)

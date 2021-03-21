@@ -13,14 +13,18 @@ const {
   pageNotFoundHandler,
   mongoErrorHandler,
 } = require('./app.controller');
-const { frontEndUrl } = require('../common/constants');
+// const { frontEndUrl } = require('../common/constants');
 
 const appRouter = Router();
 
+// appRouter.use(cors({
+//   origin: frontEndUrl,
+//   allowedHeaders: ['Cookie', 'Accept', 'Content-Type', 'X-Requested-With', 'Origin'],
+//   credentials: true,
+// }));
 appRouter.use(cors({
-  origin: frontEndUrl,
-  allowedHeaders: ['Cookie', 'Accept', 'Content-Type', 'X-Requested-With', 'Origin'],
   credentials: true,
+  origin: (reqOrigin, cb) => cb(null, reqOrigin),
 }));
 
 appRouter.use(json());
