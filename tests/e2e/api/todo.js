@@ -200,5 +200,69 @@ module.exports = () => describe('todo/', () => {
         .to.be.an('object')
         .to.have.property('message', resStrings.todo.invalidTodoId);
     });
+
+    it('should fail if no body to update', async () => {
+      const res = await chai.request(app)
+        .put(`${routePrefix}/invalidId`)
+        .set('Cookie', `token=${jwtToken}`)
+        .send();
+
+      expect(res).to.be.json;
+      expect(res).to.have.status(UNPROCESSABLE_ENTITY);
+      expect(res.body)
+        .to.have.property('error')
+        .to.be.an('object')
+        .to.have.property('message', resStrings.noBodyToUpdate);
+    });
+  });
+
+  describe('DELETE /todo/:todoId', () => {
+    it('should delete todo', async () => {
+      const { _id: todoId } = await createTodo(todoDetails);
+      const res = await chai.request(app)
+        .delete(`${routePrefix}/${todoId.toHexString()}`)
+        .set('Cookie', `token=${jwtToken}`)
+        .send();
+
+      expect(await Todo.findById(todoId))
+        .to.be.null;
+
+      expect(res)
+        .to.have.status(OK);
+      expect(res)
+        .to.be.json;
+      expect(res.body)
+        .to.have.property('todo')
+        .to.be.an('object');
+      verifyTodo(res.body.todo);
+    });
+
+    it('should return unauthorized', async () => {
+      const res = await chai.request(app)
+        .delete(`${routePrefix}/someId`)
+        .send();
+      expect(res)
+        .to.be.json;
+      expect(res)
+        .to.have.status(UNAUTHORIZED);
+      expect(res.body)
+        .to.have.property('error')
+        .to.be.an('object')
+        .to.have.property('message', resStrings.unAuthorized);
+    });
+
+    it('should fail if invalid todo id', async () => {
+      const res = await chai.request(app)
+        .delete(`${routePrefix}/invalidId`)
+        .set('Cookie', `token=${jwtToken}`)
+        .send();
+
+      expect(res).to.be.json;
+      expect(res).to.have.status(UNPROCESSABLE_ENTITY);
+      expect(res.body)
+        .to.have.property('error')
+        .to.be.an('object')
+        .to.have.property('message', resStrings.todo.invalidTodoId);
+    });
   });
 });

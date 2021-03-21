@@ -25,4 +25,7 @@ exports.updateTodoByIdAndUser = async (
 );
 
 /** @param {import('mongoose').Types.ObjectId | string} id */
-exports.deleteTodo = async (id) => await Todo.findByIdAndDelete(id);
+exports.deleteTodoByIdAndUserId = async (id, userId) => await Todo.findOneAndDelete({
+  _id: id,
+  user: userId,
+});

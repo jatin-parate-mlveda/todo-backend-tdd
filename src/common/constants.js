@@ -3,6 +3,7 @@ exports.resStrings = {
   unAuthorized: 'Unauthorized access!',
   internalServer: 'Internal Server Error!',
   unProcessableEntity: 'UnProcessable Entity!',
+  noBodyToUpdate: 'At least one parameter is required to update',
   todo: {
     invalidTodoId: 'Invalid todo id',
     userInBodyToUpdate: 'User is not allowed to be updated!',
@@ -12,7 +13,6 @@ exports.resStrings = {
   },
   user: {
     cantUpdateEmail: 'Email cannot be updated!',
-    noBodyToUpdate: 'At least one parameter is required to update',
     alreadyExists: 'User already exists!',
     notFound: 'Requested user not found!',
     invalidPassword: 'Invalid Password!',

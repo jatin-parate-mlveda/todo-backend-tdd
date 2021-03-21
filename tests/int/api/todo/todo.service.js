@@ -17,7 +17,7 @@ const Todo = require('../../../../src/api/todo/todo.model');
 const {
   createTodo,
   updateTodoByIdAndUser: updateTodo,
-  deleteTodo,
+  deleteTodoByIdAndUserId: deleteTodo,
 } = require('../../../../src/api/todo/todo.service');
 const { createUser } = require('../../../../src/api/user/user.service');
 const { resStrings } = require('../../../../src/common/constants');
@@ -179,10 +179,10 @@ module.exports = () => describe('todo.service/', () => {
     });
   });
 
-  describe('deleteTodo', () => {
+  describe('deleteTodoByIdAndUserId', () => {
     it('should delete todo', async () => {
       const { _id: todoId } = await createTodo(todoDetails);
-      const deletedTodo = await deleteTodo(todoId);
+      const deletedTodo = await deleteTodo(todoId, todoDetails.user);
       const result = await Todo.findById(todoId);
       expect(result).to.be.null;
       verifyTodo(deletedTodo);

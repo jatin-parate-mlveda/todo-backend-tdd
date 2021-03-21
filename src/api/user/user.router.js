@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { body } = require('express-validator');
 const authMiddleware = require('../../common/authMiddleware');
 const { resStrings } = require('../../common/constants');
+const noBodyToUpdateMiddleware = require('../../common/noBodyToUpdateMiddleware');
 const validateReq = require('../../common/validateReq');
 
 const {
@@ -41,13 +42,7 @@ userRouter.route('/')
   .put(
     authMiddleware,
     [
-      body().custom((reqBody) => {
-        if (Object.keys(reqBody).length === 0) {
-          throw resStrings.user.noBodyToUpdate;
-        }
-
-        return true;
-      }),
+      noBodyToUpdateMiddleware,
       body('password')
         .optional({ nullable: false })
         .exists({ checkNull: true })

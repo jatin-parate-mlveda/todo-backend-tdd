@@ -360,7 +360,7 @@ module.exports = () => describe('user/', () => {
       expect(res.body)
         .to.have.property('error')
         .to.be.an('object')
-        .to.have.property('message', resStrings.user.noBodyToUpdate);
+        .to.have.property('message', resStrings.noBodyToUpdate);
     });
 
     it('should return error if invalid avatar passed', async () => {
