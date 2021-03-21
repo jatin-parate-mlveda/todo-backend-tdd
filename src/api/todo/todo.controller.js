@@ -1,5 +1,5 @@
-const { CREATED } = require('http-codes');
-const { createTodo } = require('./todo.service');
+const { CREATED, OK } = require('http-codes');
+const { createTodo, getAllByUserId, updateTodoByIdAndUser: updateTodo } = require('./todo.service');
 
 /** @type {import('@types/express').RequestHandler} */
 exports.createTodoHandler = async ({ body, user }, res, next) => {
@@ -11,5 +11,29 @@ exports.createTodoHandler = async ({ body, user }, res, next) => {
     res.status(CREATED).json({ todo: createdTodo.toJSON() });
   } catch (error) {
     next(error);
+  }
+};
+
+/** @type {import('@types/express').RequestHandler} */
+exports.getAllTodosHandler = async ({ user }, res, next) => {
+  try {
+    const todos = await getAllByUserId(user._id.toString());
+    res.status(OK).json({ todos });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/** @type {import('@types/express').RequestHandler} */
+exports.updateTodoByIdHandler = async ({ body, user, params: { todoId } }, res, next) => {
+  try {
+    const updatedTodo = await updateTodo(
+      todoId,
+      user._id,
+      body,
+    );
+    res.status(OK).json({ todo: updatedTodo });
+  } catch (err) {
+    next(err);
   }
 };

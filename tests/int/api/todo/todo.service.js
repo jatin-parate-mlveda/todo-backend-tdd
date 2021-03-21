@@ -16,7 +16,7 @@ const User = require('../../../../src/api/user/user.model');
 const Todo = require('../../../../src/api/todo/todo.model');
 const {
   createTodo,
-  updateTodo,
+  updateTodoByIdAndUser: updateTodo,
   deleteTodo,
 } = require('../../../../src/api/todo/todo.service');
 const { createUser } = require('../../../../src/api/user/user.service');
@@ -158,7 +158,7 @@ module.exports = () => describe('todo.service/', () => {
     });
   });
 
-  describe('updateTodo', () => {
+  describe('updateTodoByIdAndUser', () => {
     it('should update todo', async () => {
       const dueDateToCreate = todoDetails.dueDate;
       dueDateToCreate.setDate(dueDateToCreate.getDate() - 5);
@@ -167,10 +167,14 @@ module.exports = () => describe('todo.service/', () => {
         title: 'otherTitle',
         dueDate: dueDateToCreate,
       });
-      const updatedTodo = await updateTodo(id, {
-        title: todoDetails.title,
-        dueDate: todoDetails.dueDate,
-      });
+      const updatedTodo = await updateTodo(
+        id,
+        todoDetails.user,
+        {
+          title: todoDetails.title,
+          dueDate: todoDetails.dueDate,
+        },
+      );
       verifyTodo(updatedTodo);
     });
   });

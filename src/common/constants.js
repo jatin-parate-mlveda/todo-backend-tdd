@@ -4,6 +4,8 @@ exports.resStrings = {
   internalServer: 'Internal Server Error!',
   unProcessableEntity: 'UnProcessable Entity!',
   todo: {
+    invalidTodoId: 'Invalid todo id',
+    userInBodyToUpdate: 'User is not allowed to be updated!',
     noDueDate: 'Due Date is required',
     noTitle: 'Title is required',
     noUser: 'Associated user is required',

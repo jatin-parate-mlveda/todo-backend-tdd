@@ -6,13 +6,16 @@ const {
   it,
 } = require('mocha');
 const chai = require('chai');
-const { CREATED, UNAUTHORIZED } = require('http-codes');
+const {
+  CREATED, UNAUTHORIZED, OK, UNPROCESSABLE_ENTITY,
+} = require('http-codes');
 const User = require('../../../src/api/user/user.model');
 const Todo = require('../../../src/api/todo/todo.model');
 const app = require('../../../src/app/app');
 const { resStrings } = require('../../../src/common/constants');
 const { createUser } = require('../../../src/api/user/user.service');
 const { sign } = require('../../../src/common/jwt');
+const { createTodo } = require('../../../src/api/todo/todo.service');
 
 const { expect } = chai;
 
@@ -32,9 +35,7 @@ let createdUser;
 let jwtToken;
 const routePrefix = '/api/todo';
 
-/**
- * @param {import('../../../src/api/todo/todo').Todo} todo
- */
+/** @param {import('../../../src/api/todo/todo').Todo} todo */
 const verifyTodo = (todo) => {
   const { dueDate, title, user } = todoDetails;
   expect(todo).not.to.be.null;
@@ -104,6 +105,100 @@ module.exports = () => describe('todo/', () => {
         .to.have.property('error')
         .to.be.an('object')
         .to.have.property('message', resStrings.unAuthorized);
+    });
+  });
+
+  describe('GET: /todo', () => {
+    it('should return all todos created by user', async () => {
+      await Promise.all([
+        createTodo(todoDetails),
+        createTodo(todoDetails),
+      ]);
+
+      const res = await chai.request(app)
+        .get(routePrefix)
+        .set('Cookie', `token=${jwtToken}`)
+        .send();
+
+      expect(res)
+        .to.be.json;
+      expect(res)
+        .to.have.status(OK);
+      expect(res.body)
+        .to.have.property('todos')
+        .to.be.an('array');
+      res.body.todos.forEach((todo) => verifyTodo(todo));
+    });
+
+    it('should return unauthorized', async () => {
+      const res = await chai.request(app)
+        .get(routePrefix)
+        .send();
+      expect(res)
+        .to.be.json;
+      expect(res)
+        .to.have.status(UNAUTHORIZED);
+      expect(res.body)
+        .to.have.property('error')
+        .to.be.an('object')
+        .to.have.property('message', resStrings.unAuthorized);
+    });
+  });
+
+  describe('PUT /todo/:todoId', () => {
+    it('should update todo', async () => {
+      const { _id: todoId } = await createTodo({
+        ...todoDetails,
+        title: 'Other title',
+        dueDate: new Date(),
+      });
+      const res = await chai.request(app)
+        .put(`${routePrefix}/${todoId.toHexString()}`)
+        .set('Cookie', `token=${jwtToken}`)
+        .send({
+          title: todoDetails.title,
+          dueDate: todoDetails.dueDate,
+        });
+
+      expect(res)
+        .to.have.status(OK);
+      expect(res)
+        .to.be.json;
+      expect(res.body)
+        .to.have.property('todo')
+        .to.be.an('object');
+      verifyTodo(res.body.todo);
+    });
+
+    it('should return unauthorized', async () => {
+      const res = await chai.request(app)
+        .put(`${routePrefix}/someId`)
+        .send();
+      expect(res)
+        .to.be.json;
+      expect(res)
+        .to.have.status(UNAUTHORIZED);
+      expect(res.body)
+        .to.have.property('error')
+        .to.be.an('object')
+        .to.have.property('message', resStrings.unAuthorized);
+    });
+
+    it('should fail if invalid todo id', async () => {
+      const res = await chai.request(app)
+        .put(`${routePrefix}/invalidId`)
+        .set('Cookie', `token=${jwtToken}`)
+        .send({
+          title: todoDetails.title,
+          dueDate: todoDetails.dueDate,
+        });
+
+      expect(res).to.be.json;
+      expect(res).to.have.status(UNPROCESSABLE_ENTITY);
+      expect(res.body)
+        .to.have.property('error')
+        .to.be.an('object')
+        .to.have.property('message', resStrings.todo.invalidTodoId);
     });
   });
 });

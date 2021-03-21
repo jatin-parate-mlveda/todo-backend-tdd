@@ -8,12 +8,21 @@ exports.createTodo = async (todoDetails) => await Todo.create(todoDetails);
 
 /**
  * @param {import('mongoose').Types.ObjectId | string} todoId
+ * @param {import('mongoose').Types.ObjectId | string} userId
  * @param {Pick<import('./todo').TodoCreateData, 'dueDate' | 'title'>} param1
  */
-exports.updateTodo = async (
+exports.updateTodoByIdAndUser = async (
   todoId,
+  userId,
   docToUpdate = {},
-) => await Todo.findByIdAndUpdate(todoId, docToUpdate, { new: true, runValidators: true });
+) => await Todo.findOneAndUpdate(
+  {
+    _id: todoId,
+    user: userId,
+  },
+  docToUpdate,
+  { new: true, runValidators: true },
+);
 
 /** @param {import('mongoose').Types.ObjectId | string} id */
 exports.deleteTodo = async (id) => await Todo.findByIdAndDelete(id);
