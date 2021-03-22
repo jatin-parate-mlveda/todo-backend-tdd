@@ -2,6 +2,7 @@
   "name": "todo-backend",
   "version": "1.0.0",
   "scripts": {
+    "start": "NODE_ENV=production node ./src/server.js",
     "start:local": "nodemon ./src/server.js",
     "test:local": "NODE_ENV=test-local mocha ./tests/index.js --exit --timeout 5000",
     "test:gh": "NODE_ENV=test-gh mocha ./tests/index.js --exit --timeout 5000"
