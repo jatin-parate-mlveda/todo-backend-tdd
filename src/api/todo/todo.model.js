@@ -21,6 +21,12 @@ const todoSchema = new Schema(
       ref: userModelName,
       required: [true, resStrings.noUser],
     },
+    priority: {
+      type: Number,
+      required: [true, resStrings.noPriority],
+      enum: [1, 2, 3],
+      default: 1,
+    },
   },
   {
     versionKey: false,

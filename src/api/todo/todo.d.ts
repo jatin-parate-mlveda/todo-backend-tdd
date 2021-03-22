@@ -1,10 +1,17 @@
-import { Model, Schema, Document, Types, Types } from 'mongoose';
+import { Model, Schema, Document, Types } from 'mongoose';
 import { UserDocument } from '../user/user.d';
+
+declare enum PriorityLevel {
+  High = 1,
+  Medium = 2,
+  Low = 2,
+}
 
 type TodoCreateData = {
   user: Types.ObjectId | UserDocument;
   title: string;
   dueDate?: Date;
+  priority: PriorityLevel;
 }
 
 type Todo = TodoCreateData & {

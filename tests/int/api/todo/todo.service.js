@@ -59,6 +59,9 @@ const verifyTodo = (todo) => {
     .to.be.instanceOf(ObjectId);
   expect(todo.user.toHexString())
     .to.be.equal(user.toHexString());
+  expect(todo)
+    .to.have.property('priority')
+    .to.be.oneOf([1, 2, 3]);
 };
 
 module.exports = () => describe('todo.service/', () => {

@@ -10,6 +10,7 @@ exports.resStrings = {
     noDueDate: 'Due Date is required',
     noTitle: 'Title is required',
     noUser: 'Associated user is required',
+    noPriority: 'Priority is required',
   },
   user: {
     cantUpdateEmail: 'Email cannot be updated!',
